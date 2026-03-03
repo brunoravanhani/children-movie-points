@@ -1,7 +1,7 @@
 import { GoogleLogin } from "@react-oauth/google";
 import { Navigate, useNavigate } from "react-router";
 import { useContext } from "react";
-import { AuthContext } from "../../Context/AuthContext";
+import { AuthContext } from "../../Context/AuthContext.jsx";
 
 export default function Login() {
   const navigate = useNavigate();

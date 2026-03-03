@@ -1,11 +1,11 @@
 import { useContext } from "react";
 import { BrowserRouter, Routes, Route } from "react-router";
-import Home from './Pages/Home/index';
-import { PrivateRoute } from "./Components/Auth/PrivateRoute";
-import Login from "./Pages/Login/index";
-import Landing from "./Pages/Landing/index";
-import NotFound from "./Pages/NotFound/index";
-import { AuthContext } from "./Context/AuthContext";
+import Home from './Pages/Home/index.jsx';
+import { PrivateRoute } from "./Components/Auth/PrivateRoute.jsx";
+import Login from "./Pages/Login/index.jsx";
+import Landing from "./Pages/Landing/index.jsx";
+import NotFound from "./Pages/NotFound/index.jsx";
+import { AuthContext } from "./Context/AuthContext.jsx";
 
 const Router = () => {
     const { token } = useContext(AuthContext);
