@@ -8,7 +8,7 @@ export default function Login() {
   const { token, login } = useContext(AuthContext);
 
   if (token) {
-    return <Navigate to="/home" replace />;
+    return <Navigate to="/app" replace />;
   }
 
   return (
@@ -46,7 +46,7 @@ export default function Login() {
 
     login(data.token);
 
-    navigate('/home', { replace: true });
+    navigate('/app', { replace: true });
   }
 
 }
