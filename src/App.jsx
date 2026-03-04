@@ -6,7 +6,7 @@ import './App.css';
 function App() {
   return (
     <AuthProvider>
-      <GoogleOAuthProvider clientId="305270341511-6l5bs6cv3dm9vqg50d6hfq75lj5d7vqm.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId="">
         <Router />
       </GoogleOAuthProvider>
     </AuthProvider>
