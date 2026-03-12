@@ -1,7 +1,8 @@
 import { useState, useContext } from 'react';
 import { Search as IconSearch } from "lucide-react";
-import { AuthContext } from "../../../Context/AuthContext.jsx";
-import MovieList from '../../../Components/Movie/MovieList.jsx';
+import { AuthContext } from "../../Context/AuthContext.jsx";
+import MovieList from '../../Components/Movie/MovieList.jsx';
+import { searchMovies } from "../../services/api.js";
 
 export default function Search() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -21,21 +22,8 @@ export default function Search() {
         setError(null);
 
         try {
-            const url = `https://localhost:8080/movies/search?query=${encodeURIComponent(searchQuery)}`;
-
-            const response = await fetch(url, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (response.status === 200) {
-                const data = await response.json();
-                setMovies(data || []);
-            } else {
-                setMovies([]);
-                setError(data.Error || 'No results found');
-            }
+            const data = await searchMovies(searchQuery, token);
+            setMovies(data || []);
         } catch (fetchError) {
             setMovies([]);
             setError(fetchError.message || 'Failed to fetch results');

@@ -10,9 +10,9 @@ export default function Navbar() {
   const { token, logout } = useContext(AuthContext);
 
   const links = [
-    { name: "Home", to: "/" },
-    { name: "Meus Filmes", to: "/galery" },
-    { name: "Buscar Filmes", to: "/search" }
+    { name: "Home", to: "/app" },
+    { name: "Meus Filmes", to: "/app/galery" },
+    { name: "Buscar Filmes", to: "/app/search" }
   ];
 
   const baseLinkStyle =

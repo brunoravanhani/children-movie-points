@@ -6,7 +6,7 @@ import Login from "./Pages/Login/index.jsx";
 import Landing from "./Pages/Landing/index.jsx";
 import NotFound from "./Pages/NotFound/index.jsx";
 import { AuthContext } from "./Context/AuthContext.jsx";
-import Search from "./Pages/Galery/Search/Search.jsx";
+import Search from "./Pages/Search/Search.jsx";
 import Galery from "./Pages/Galery/Galery.jsx";
 
 const Router = () => {

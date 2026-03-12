@@ -2,6 +2,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import { Navigate, useNavigate } from "react-router";
 import { useContext } from "react";
 import { AuthContext } from "../../Context/AuthContext.jsx";
+import { loginWithGoogle } from "../../services/api.js";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -19,7 +20,9 @@ export default function Login() {
         onSuccess={async (credentialResponse) => {
           const googleToken = credentialResponse.credential;
 
-          await loginWithBackend(googleToken);
+          const data = await loginWithGoogle(googleToken);
+          login(data.token);
+          navigate("/app", { replace: true });
         }}
         onError={() => {
           console.log("Login Failed");
@@ -27,26 +30,5 @@ export default function Login() {
       />
     </div>
   );
-
-  async function loginWithBackend(googleToken) {
-
-    const requestbody = {
-      IdToken: googleToken
-    };
-
-    const response = await fetch("https://localhost:8080/auth/google", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(requestbody)
-    });
-
-    const data = await response.json();
-
-    login(data.token);
-
-    navigate('/app', { replace: true });
-  }
 
 }
