@@ -47,6 +47,8 @@ h1 {
 
 .base {
   margin-top: 64px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 @media (prefers-color-scheme: light) {

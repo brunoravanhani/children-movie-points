@@ -1,16 +1,18 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { NavLink } from "react-router";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { AuthContext } from "../../Context/AuthContext";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const { token, logout } = useContext(AuthContext);
 
   const links = [
     { name: "Home", to: "/" },
-    { name: "Sobre", to: "/sobre" },
-    { name: "Projetos", to: "/projetos" },
-    { name: "Contato", to: "/contato" },
+    { name: "Meus Filmes", to: "/galery" },
+    { name: "Buscar Filmes", to: "/search" }
   ];
 
   const baseLinkStyle =
@@ -29,7 +31,7 @@ export default function Navbar() {
           </NavLink>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex items-center space-x-8">
             {links.map((link) => (
               <NavLink
                 key={link.name}
@@ -45,6 +47,45 @@ export default function Navbar() {
                 {link.name}
               </NavLink>
             ))}
+
+            {/* User menu */}
+            {token ? (
+              <div className="relative">
+                <button
+                  onClick={() => setIsUserMenuOpen((prev) => !prev)}
+                  className="flex items-center gap-2 text-gray-700 hover:text-black focus:outline-none"
+                >
+                  <User size={20} />
+                </button>
+
+                {isUserMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg z-50">
+                    <button
+                      onClick={() => {
+                        logout();
+                        setIsUserMenuOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                    >
+                      Sair
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  `${baseLinkStyle} ${
+                    isActive
+                      ? "text-black"
+                      : "text-gray-600 hover:text-black"
+                  }`
+                }
+              >
+                Login
+              </NavLink>
+            )}
           </div>
 
           {/* Mobile Button */}
@@ -86,6 +127,26 @@ export default function Navbar() {
                   {link.name}
                 </NavLink>
               ))}
+
+              {token ? (
+                <button
+                  onClick={() => {
+                    logout();
+                    setIsOpen(false);
+                  }}
+                  className="w-full text-left text-base font-medium text-gray-600 hover:text-black"
+                >
+                  Sair
+                </button>
+              ) : (
+                <NavLink
+                  to="/login"
+                  className="block text-base font-medium text-gray-600 hover:text-black"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Login
+                </NavLink>
+              )}
             </div>
           </motion.div>
         )}
