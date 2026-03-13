@@ -37,3 +37,20 @@ export async function searchMovies(query, token) {
 
   return data;
 }
+
+export async function AddMovie(movieData, token) {
+  const response = await fetch(`${API_BASE_URL}/movies/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(movieData),
+  });
+
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data?.Error || data?.message || "Add movie failed");
+  }
+
+}

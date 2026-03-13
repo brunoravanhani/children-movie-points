@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import { Search as IconSearch } from "lucide-react";
 import { AuthContext } from "../../Context/AuthContext.jsx";
 import MovieList from '../../Components/Movie/MovieList.jsx';
-import { searchMovies } from "../../services/api.js";
+import { searchMovies, AddMovie } from "../../services/api.js";
 
 export default function Search() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -32,6 +32,16 @@ export default function Search() {
         }
     };
 
+    const handleAddToFavorites = async (movie) => {
+        try {
+            await AddMovie(movie, token);
+            alert('Movie added successfully!');
+        } catch (error) {
+            console.error('Failed to add movie:', error);
+            alert('Failed to add movie. Please try again.');
+        }
+    }
+
     return (
         <div className="base">
             <div className="max-w-150 mx-auto p-4 mb-10">
@@ -60,7 +70,7 @@ export default function Search() {
                     
                 </form>
             </div>
-            <MovieList movies={movies} />
+            <MovieList movies={movies} onAddToFavorites={handleAddToFavorites} />
         </div>
     );
 }
