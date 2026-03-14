@@ -6,7 +6,7 @@ import './App.css';
 function App() {
   return (
     <AuthProvider>
-      <GoogleOAuthProvider clientId="">
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
         <Router />
       </GoogleOAuthProvider>
     </AuthProvider>

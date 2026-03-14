@@ -48,9 +48,25 @@ export async function AddMovie(movieData, token) {
     body: JSON.stringify(movieData),
   });
 
+  
   if (!response.ok) {
-    const data = await response.json();
-    throw new Error(data?.Error || data?.message || "Add movie failed");
+    throw new Error("Failed to add movie");
+  }
+  
+}
+
+export async function getAll(token) {
+  const response = await fetch(`${API_BASE_URL}/movies/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data?.Error || data?.message || "Get all movies failed");
   }
 
+  return data;
 }
