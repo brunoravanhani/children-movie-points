@@ -35,12 +35,21 @@ export default function Search() {
     const handleAddToFavorites = async (movie) => {
         try {
             await AddMovie(movie, token);
-            alert('Movie added successfully!');
         } catch (error) {
             console.error('Failed to add movie:', error);
             alert('Failed to add movie. Please try again.');
         }
-    }
+    };
+
+    const renderSearchButtonSection = ({ movie }) => (
+        <button
+            type="button"
+            onClick={() => handleAddToFavorites(movie)}
+            className="mt-4 w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+        >
+            Adicionar aos meus filmes
+        </button>
+    );
 
     return (
         <div className="base">
@@ -70,7 +79,10 @@ export default function Search() {
                     
                 </form>
             </div>
-            <MovieList movies={movies} onAddToFavorites={handleAddToFavorites} />
+            <MovieList
+                movies={movies}
+                renderButtonSection={renderSearchButtonSection}
+            />
         </div>
     );
 }

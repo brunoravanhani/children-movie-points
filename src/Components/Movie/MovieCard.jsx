@@ -1,7 +1,24 @@
 
-export default function MovieCard({ movie, onAddToFavorites, className = "" }) {
+export default function MovieCard({ movie, className = "", renderButtonSection, renderExtraSection }) {
   const { title, overview, releaseDate, posterPath } = movie || {};
   const year = releaseDate ? new Date(releaseDate).getFullYear() : null;
+
+  const customButtonSection = typeof renderButtonSection === "function"
+    ? renderButtonSection({ movie })
+    : renderButtonSection;
+
+  const extraSection = typeof renderExtraSection === "function"
+    ? renderExtraSection({ movie })
+    : renderExtraSection;
+
+  const defaultButtonSection = (
+    <button
+      type="button"
+      className="mt-4 w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+    >
+      Adicionar
+    </button>
+  );
 
   return (
     <article
@@ -24,13 +41,9 @@ export default function MovieCard({ movie, onAddToFavorites, className = "" }) {
 
         <p className="text-sm text-gray-600 line-clamp-4">{overview}</p>
 
-        <button
-          type="button"
-            onClick={() => onAddToFavorites(movie)}
-          className="mt-4 w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
-        >
-          Adicionar aos meus filmes
-        </button>
+        {extraSection}
+        
+        {customButtonSection ?? defaultButtonSection}
       </div>
     </article>
   );
