@@ -69,6 +69,24 @@ export async function deleteMovie(movieId, token) {
   }
 }
 
+export async function updateMoviePoints(movieId, points, token) {
+  const response = await fetch(`${API_BASE_URL}/movies/${movieId}/points`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ points }),
+  });
+
+  
+  if (!response.ok) {
+    const data = await response.json().catch(() => null);
+    throw new Error(data?.Error || data?.message || "Failed to update movie points");
+  }
+
+}
+
 export async function getAll(token) {
   const response = await fetch(`${API_BASE_URL}/movies/`, {
     headers: {

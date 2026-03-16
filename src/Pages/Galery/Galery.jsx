@@ -1,13 +1,17 @@
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from "../../Context/AuthContext.jsx";
 import MovieList from '../../Components/Movie/MovieList.jsx';
-import { getAll, deleteMovie } from "../../services/api.js";
+import Modal from '../../Components/Modal/Modal.jsx';
+import { getAll, deleteMovie, updateMoviePoints } from "../../services/api.js";
 
 export default function Search() {
     const [searchQuery, setSearchQuery] = useState('');
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedMovie, setSelectedMovie] = useState(null);
+    const [moviePointsInput, setMoviePointsInput] = useState('');
     const { token } = useContext(AuthContext);
 
     useEffect(() => {
@@ -35,6 +39,45 @@ export default function Search() {
         }
     };
 
+    const handleOpenEditModal = (movie) => {
+        setSelectedMovie(movie);
+        setMoviePointsInput(movie?.points || 1);
+        setIsEditModalOpen(true);
+    };
+
+    const handleCloseEditModal = () => {
+        setIsEditModalOpen(false);
+        setSelectedMovie(null);
+        setMoviePointsInput(1);
+    };
+
+    const handleUpdateMoviePoints = async () => {
+        if (!selectedMovie?.id) {
+            setError('Filme inválido para atualização');
+            return;
+        }
+
+        const parsedPoints = Number(moviePointsInput);
+
+        if (Number.isNaN(parsedPoints)) {
+            setError('Valor de pontos inválido');
+            return;
+        }
+
+        try {
+            setError(null);
+            await updateMoviePoints(selectedMovie.id, parsedPoints, token);
+            setMovies((prev) =>
+                prev.map((movie) =>
+                    movie.id === selectedMovie.id ? { ...movie, points: parsedPoints } : movie
+                )
+            );
+            handleCloseEditModal();
+        } catch (err) {
+            setError(err.message || 'Failed to update movie points');
+        }
+    };
+
     const renderGaleryButtonSection = ({movie}) => (
         <div className="mt-4 grid grid-cols-3 gap-2">
             <button
@@ -45,6 +88,7 @@ export default function Search() {
             </button>
             <button
                 type="button"
+                onClick={() => handleOpenEditModal(movie)}
                 className="rounded-md border border-indigo-300 px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
             >
                 Alterar
@@ -77,6 +121,42 @@ export default function Search() {
                 movies={movies} 
                 renderButtonSection={renderGaleryButtonSection}
                 renderExtraSection={renderExtraSection} />
+
+            <Modal
+                isOpen={isEditModalOpen}
+                onClose={handleCloseEditModal}
+                title={selectedMovie?.title}
+                footer={(
+                    <div className="flex justify-end gap-2">
+                        <button
+                            type="button"
+                            onClick={handleCloseEditModal}
+                            className="rounded-md border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                        >
+                            Cancelar
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleUpdateMoviePoints}
+                            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+                        >
+                            Salvar
+                        </button>
+                    </div>
+                )}
+            >
+                <label className="mb-2 block text-sm font-medium text-gray-700" htmlFor="movie-title-input">
+                    Pontos do Filme
+                </label>
+                <input
+                    id="movie-points-input"
+                    type="number"
+                    value={moviePointsInput}
+                    onChange={(event) => setMoviePointsInput(event.target.value)}
+                    placeholder="Digite os pontos do filme"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+            </Modal>
         </div>
     );
 }
