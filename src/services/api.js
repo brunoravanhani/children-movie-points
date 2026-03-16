@@ -55,6 +55,20 @@ export async function AddMovie(movieData, token) {
   
 }
 
+export async function deleteMovie(movieId, token) {
+  const response = await fetch(`${API_BASE_URL}/movies/${movieId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data?.Error || data?.message || "Failed to delete movie");
+  }
+}
+
 export async function getAll(token) {
   const response = await fetch(`${API_BASE_URL}/movies/`, {
     headers: {

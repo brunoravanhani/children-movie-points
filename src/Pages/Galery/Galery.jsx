@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from "../../Context/AuthContext.jsx";
 import MovieList from '../../Components/Movie/MovieList.jsx';
-import { getAll } from "../../services/api.js";
+import { getAll, deleteMovie } from "../../services/api.js";
 
 export default function Search() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -26,7 +26,16 @@ export default function Search() {
         });
     }, []);
 
-    const renderGaleryButtonSection = () => (
+    const handleRemove = async (movie) => {
+        try {
+            await deleteMovie(movie.id, token);
+            setMovies((prev) => prev.filter((m) => m.id !== movie.id));
+        } catch (err) {
+            setError(err.message || 'Failed to remove movie');
+        }
+    };
+
+    const renderGaleryButtonSection = ({movie}) => (
         <div className="mt-4 grid grid-cols-3 gap-2">
             <button
                 type="button"
@@ -42,6 +51,7 @@ export default function Search() {
             </button>
             <button
                 type="button"
+                onClick={() => handleRemove(movie)}
                 className="rounded-md border border-red-300 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 cursor-pointer"
             >
                 Excluir
