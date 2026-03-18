@@ -1,5 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
-import { AuthContext } from "../../Context/AuthContext.jsx";
+import { useState, useEffect } from 'react';
 import MovieList from '../../Components/Movie/MovieList.jsx';
 import Modal from '../../Components/Modal/Modal.jsx';
 import { getAll, deleteMovie, updateMoviePoints } from "../../services/api.js";
@@ -12,13 +11,12 @@ export default function Search() {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedMovie, setSelectedMovie] = useState(null);
     const [moviePointsInput, setMoviePointsInput] = useState('');
-    const { token } = useContext(AuthContext);
 
     useEffect(() => {
         const fetchMovies = async () => {
             setLoading(true);
             setError(null);
-            getAll(token).then((data) => {
+            getAll().then((data) => {
                 setMovies(data || []);
             });
         }
@@ -32,7 +30,7 @@ export default function Search() {
 
     const handleRemove = async (movie) => {
         try {
-            await deleteMovie(movie.id, token);
+            await deleteMovie(movie.id);
             setMovies((prev) => prev.filter((m) => m.id !== movie.id));
         } catch (err) {
             setError(err.message || 'Failed to remove movie');
@@ -66,7 +64,7 @@ export default function Search() {
 
         try {
             setError(null);
-            await updateMoviePoints(selectedMovie.id, parsedPoints, token);
+            await updateMoviePoints(selectedMovie.id, parsedPoints);
             setMovies((prev) =>
                 prev.map((movie) =>
                     movie.id === selectedMovie.id ? { ...movie, points: parsedPoints } : movie

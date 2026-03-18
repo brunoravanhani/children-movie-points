@@ -20,8 +20,8 @@ export default function Login() {
         onSuccess={async (credentialResponse) => {
           const googleToken = credentialResponse.credential;
 
-          const data = await loginWithGoogle(googleToken);
-          login(data.token);
+          await loginWithGoogle(googleToken);
+          login();
           navigate("/app", { replace: true });
         }}
         onError={() => {

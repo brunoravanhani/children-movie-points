@@ -1,6 +1,5 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { Search as IconSearch } from "lucide-react";
-import { AuthContext } from "../../Context/AuthContext.jsx";
 import MovieList from '../../Components/Movie/MovieList.jsx';
 import { searchMovies, AddMovie } from "../../services/api.js";
 
@@ -9,8 +8,6 @@ export default function Search() {
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const { token } = useContext(AuthContext);
-
     const handleSearch = async (e) => {
         e.preventDefault();
 
@@ -22,7 +19,7 @@ export default function Search() {
         setError(null);
 
         try {
-            const data = await searchMovies(searchQuery, token);
+            const data = await searchMovies(searchQuery);
             setMovies(data || []);
         } catch (fetchError) {
             setMovies([]);
@@ -34,7 +31,7 @@ export default function Search() {
 
     const handleAddToFavorites = async (movie) => {
         try {
-            await AddMovie(movie, token);
+            await AddMovie(movie);
         } catch (error) {
             console.error('Failed to add movie:', error);
             alert('Failed to add movie. Please try again.');
