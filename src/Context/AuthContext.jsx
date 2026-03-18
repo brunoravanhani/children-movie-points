@@ -25,8 +25,11 @@ export function AuthProvider({ children }) {
   };
 
   const logout = async () => {
-    await logoutRequest();
-    setToken(null);
+    try {
+      await logoutRequest();
+    } finally {
+      setToken(null);
+    }
   };
 
   const authValue = useMemo(
